@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react'
+import './App.css'
 
-function App() {
+// GET https://pokeapi.co/api/v2/pokemon/{id or name}/
+
+export default function App() {
+
+  const fetchPokemonData = (name) => {
+    const endpoint = `https://pokeapi.co/api/v2/pokemon/${name}`
+    fetch(endpoint)
+      .then(res => {
+        if (res.ok) return res.json()
+        console.log('API Error')
+      })
+      .then(json => setData(JSON.stringify(json)))
+      .catch(err => console.error(err))
+  }
+
+  const [data, setData] = useState('')
+  fetchPokemonData('charizard')
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Test 2 <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <p className='data'>
+        {data}
+      </p>
     </div>
   );
 }
-
-export default App;
