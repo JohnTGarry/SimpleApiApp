@@ -1,29 +1,28 @@
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import './App.css'
 
 // GET https://pokeapi.co/api/v2/pokemon/{id or name}/
 
 export default function App() {
 
-  const fetchPokemonData = (name) => {
-    const endpoint = `https://pokeapi.co/api/v2/pokemon/${name}`
-    fetch(endpoint)
-      .then(res => {
-        if (res.ok) return res.json()
-        console.log('API Error')
-      })
-      .then(json => setData(JSON.stringify(json)))
-      .catch(err => console.error(err))
-  }
+  const [pokemonList, setPokemonList] = useState([])
 
-  const [data, setData] = useState('')
-  fetchPokemonData('charizard')
+  useEffect(() => {
+    axios.get(`https://pokeapi.co/api/v2/pokemon`)
+      .then(res => {
+        setPokemonList(res.data.results)
+      })
+      .catch(err => console.error(err))
+  }, [])
 
   return (
     <div className='App'>
-      <p className='data'>
-        {data}
-      </p>
+      <ul>
+        {pokemonList.map(pokemonItem => (
+          <li>{pokemonItem.name}</li>
+        ))}
+      </ul>
     </div>
   );
 }
